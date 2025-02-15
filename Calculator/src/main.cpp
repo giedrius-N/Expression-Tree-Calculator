@@ -3,9 +3,13 @@
 
 int main()
 {
+	std::string expression = "10 + 20x + 20 / 5";
 	Calculator calc;
 
-	calc.Evaluate("1.5+5+9.25 * 20.1 - (5 - 20) / 2.1a");
+	double result = calc.Evaluate(expression);
+
+	std::cout << "Mathematical expression: " << expression << std::endl;
+	std::cout << "The result: " << result << std::endl;
 
 	return 0;
 }

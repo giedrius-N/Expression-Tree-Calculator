@@ -1,5 +1,6 @@
 #ifndef TOKEN_H
 #define TOKEN_H
+#include <string>
 
 /// <summary>
 /// Enum representing the type of a token.
@@ -7,7 +8,8 @@
 enum class TokenType
 {
 	NUMBER,
-	OPERATOR
+	OPERATOR,
+	VARIABLE
 };
 
 /// <summary>
@@ -29,6 +31,12 @@ public:
 	Token(char operation);
 
 	/// <summary>
+	/// Constructor for a variable token.
+	/// </summary>
+	/// <param name="variable">String representing the variable name.</param>
+	Token(const std::string& variable);
+
+	/// <summary>
 	/// Gets the token type.
 	/// </summary>
 	/// <returns>TokenType of the token.</returns>
@@ -46,6 +54,12 @@ public:
 	/// <returns>Operator character.</returns>
 	char GetOperation() const;
 
+	/// <summary>
+	/// Gets the variable name of the token.
+	/// </summary>
+	/// <returns>Variable name as a string.</returns>
+	std::string GetVariable() const;
+
 private:
 	// Type of the token
 	TokenType m_type;
@@ -53,6 +67,8 @@ private:
 	double m_number;
 	// Operator character (if token is an operator)
 	char m_operation;
+	// Variable in string
+	std::string m_variable;
 };
 
 #endif // TOKEN_H
