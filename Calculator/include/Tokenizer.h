@@ -1,7 +1,7 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 #include "Token.h"
-#include <string>
+#include "Types.h"
 #include <vector>
 
 /// <summary>
@@ -20,8 +20,9 @@ public:
 	/// </summary>
 	/// <param name="expression">The input mathematical expression as a string.</param>
 	/// <param name="tokens">The output vector of tokens.</param>
-	/// <param name="returnPostix">Flag to tell if return tokens in postfix form. Default is true</param>
-	static void Tokenize(std::string& expression, std::vector<Token>& tokens, bool returnPostix = true);
+	/// <param name="variables">Variable pool for symbolic variables in expression.</param>
+	/// <param name="returnPostfix">Flag to tell if return tokens in postfix form. Default is true</param>
+	static void Tokenize(std::string& expression, std::vector<Token>& tokens, VariableMap& variables, bool returnPostfix = true);
 
 private:
 	/// <summary>
@@ -50,6 +51,26 @@ private:
 	/// <param name="operation">Operator character.</param>
 	/// <returns>Precedence value (higher means higher priority).</returns>
 	static int GetPrecedence(char operation);
+
+	/// <summary>
+	/// Extracts all variable names from the given expression.
+	/// </summary>
+	/// <param name="expression">The input mathematical expression as a string.</param>
+	/// <returns>A vector of unique variable names found in the expression.</returns>
+	static std::vector<std::string> GetVariables(const std::string& expression);
+
+	/// <summary>
+	/// Prompts the user to enter values for a list of variables.
+	/// </summary>
+	/// <param name="variableList">List of variables requiring user input.</param>
+	/// <returns>A VariableMap containing variable names and their values.</returns>
+	static VariableMap PromptForVariableValues(const std::vector<std::string>& variableList);
+
+	/// <summary>
+	/// Inserts multiplication operators between numbers and variables where omitted.
+	/// </summary>
+	/// <param name="expression">The input expression to be processed.</param>
+	static void InsertMultiplication(std::string& expression);
 };
 
 #endif // TOKENIZER_H

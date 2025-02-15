@@ -12,7 +12,10 @@ ExpressionParser::~ExpressionParser()
 {
 }
 
-std::unique_ptr<Node> ExpressionParser::BuildExpressionTree(const std::vector<Token>& tokens)
+std::unique_ptr<Node> ExpressionParser::BuildExpressionTree(
+    const std::vector<Token>& tokens, 
+    VariableMap& variablePool
+)
 {
     std::stack<std::unique_ptr<Node>> nodeStack;
 
@@ -21,6 +24,11 @@ std::unique_ptr<Node> ExpressionParser::BuildExpressionTree(const std::vector<To
         if (token.GetType() == TokenType::NUMBER)
         {
             nodeStack.push(std::make_unique<NumberNode>(token.GetNumber()));
+        }
+        else if (token.GetType() == TokenType::VARIABLE)
+        {
+            double value = variablePool.at(token.GetVariable());
+            nodeStack.push(std::make_unique<NumberNode>(value));
         }
         else if (token.GetType() == TokenType::OPERATOR)
         {
@@ -34,21 +42,24 @@ std::unique_ptr<Node> ExpressionParser::BuildExpressionTree(const std::vector<To
             auto left = std::move(nodeStack.top());
             nodeStack.pop();
 
-            nodeStack.push(std::make_unique<OperatorNode>(token.GetOperation(), std::move(left), std::move(right)));
+            nodeStack.push(
+                std::make_unique<OperatorNode>(
+                    token.GetOperation(), 
+                    std::move(left), 
+                    std::move(right)
+                )
+            );
         }
     }
-
-    if (nodeStack.size() != 1)
+    
+    // Verify that the stack contains exactly one node, representing the final result.
+    if (nodeStack.size() != 1 || nodeStack.empty())
     {
         throw std::runtime_error("Invalid expression");
     }
 
-    if (nodeStack.empty())
-    {
-        throw std::runtime_error("Stack is empty when trying to return result");
-    }
-
     std::unique_ptr<Node> result = std::move(nodeStack.top());
     nodeStack.pop();
+
     return result;
 }

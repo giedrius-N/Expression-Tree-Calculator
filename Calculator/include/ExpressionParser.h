@@ -2,6 +2,7 @@
 #define EXPRESSIONPARSER_H
 #include "Node.h"
 #include "Token.h"
+#include "Types.h"
 #include <memory>
 #include <vector>
 
@@ -27,7 +28,7 @@ public:
 	/// </summary>
 	/// <param name="tokens">Vector of tokens representing the expression.</param>
 	/// <returns>Unique pointer to the root node of the expression tree.</returns>
-	std::unique_ptr<Node> BuildExpressionTree(const std::vector<Token>& tokens);
+	std::unique_ptr<Node> BuildExpressionTree(const std::vector<Token>& tokens, VariableMap& variablePool);
 };
 
 #endif // EXPRESSIONPARSER_H

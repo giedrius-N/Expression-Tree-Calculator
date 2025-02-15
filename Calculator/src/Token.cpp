@@ -4,6 +4,7 @@ Token::Token(char operation)
 	: m_type(TokenType::OPERATOR)
 	, m_number(0)
 	, m_operation(operation)
+	, m_variable("")
 {
 }
 
@@ -11,6 +12,15 @@ Token::Token(double number)
 	: m_type(TokenType::NUMBER)
 	, m_number(number)
 	, m_operation('\0')
+	, m_variable("")
+{
+}
+
+Token::Token(const std::string& variable)
+	: m_type(TokenType::VARIABLE)
+	, m_number(0)
+	, m_operation('\0')
+	, m_variable(variable)
 {
 }
 
@@ -27,4 +37,9 @@ double Token::GetNumber() const
 char Token::GetOperation() const
 {
 	return m_operation;
+}
+
+std::string Token::GetVariable() const
+{
+	return m_variable;
 }

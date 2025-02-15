@@ -1,7 +1,11 @@
 #include "OperatorNode.h"
 #include <stdexcept>
 
-OperatorNode::OperatorNode(char operation, std::unique_ptr<Node> left, std::unique_ptr<Node> right)
+OperatorNode::OperatorNode(
+	char operation, 
+	std::unique_ptr<Node> left, 
+	std::unique_ptr<Node> right
+)
 	: m_operation(operation)
 	, m_left(std::move(left))
 	, m_right(std::move(right))
