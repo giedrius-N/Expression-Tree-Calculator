@@ -4,7 +4,7 @@
 
 void Tokenizer::Tokenize(std::string& expression, std::vector<Token>& tokens)
 {
-	// Remove spaces
+	// Removes spaces
 	expression.erase(std::remove_if(expression.begin(), expression.end(), isspace), expression.end());
 
 	tokens.reserve(expression.size());
@@ -21,21 +21,23 @@ void Tokenizer::Tokenize(std::string& expression, std::vector<Token>& tokens)
 		{
 			if (!currentNumber.empty())
 			{
-				tokens.emplace_back(TokenType::NUMBER, std::stod(currentNumber));
+				// Creates number token
+				tokens.emplace_back(std::stod(currentNumber));
 				currentNumber.clear();
 				continue;
 			}
 
 			if (IsOperator(character))
 			{
-				tokens.emplace_back(TokenType::OPERATOR, character);
+				// Creates operation token
+				tokens.emplace_back(character);
 			}
 		}
 	}
 
 	if (!currentNumber.empty())
 	{
-		tokens.emplace_back(TokenType::NUMBER, std::stod(currentNumber));
+		tokens.emplace_back(std::stod(currentNumber));
 	}
 }
 

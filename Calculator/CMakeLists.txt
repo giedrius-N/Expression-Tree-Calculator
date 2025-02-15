@@ -11,6 +11,8 @@ add_executable(${PROJECT_NAME}
 	include/Calculator.h
 	src/Tokenizer.cpp
 	include/Tokenizer.h
+	src/Token.cpp
+	include/Token.h
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

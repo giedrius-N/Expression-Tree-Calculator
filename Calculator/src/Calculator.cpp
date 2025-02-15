@@ -18,15 +18,15 @@ double Calculator::Evaluate(std::string expression)
 
 	Tokenizer::Tokenize(expression, tokens);
 
-	for (auto token : tokens)
+	for (auto const& token : tokens)
 	{
-		if (token.type == TokenType::NUMBER)
+		if (token.GetType() == TokenType::NUMBER)
 		{
-			std::cout << token.number << std::endl;
+			std::cout << token.GetNumber() << std::endl;
 		}
 		else
 		{
-			std::cout << token.operation << std::endl;
+			std::cout << token.GetOperation() << std::endl;
 		}
 	}
 
