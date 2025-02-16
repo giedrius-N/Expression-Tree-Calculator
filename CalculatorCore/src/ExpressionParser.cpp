@@ -27,7 +27,7 @@ std::unique_ptr<Node<T>> ExpressionParser<T>::BuildExpressionTree(
     const VariableMap<T>& variablePool
 )
 {
-    std::stack<std::unique_ptr<Node<T>>> nodeStack;
+    auto nodeStack = std::stack<std::unique_ptr<Node<T>>>{};
 
     for (const auto& token : tokens)
     {

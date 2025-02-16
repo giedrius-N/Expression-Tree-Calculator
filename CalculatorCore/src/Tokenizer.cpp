@@ -30,7 +30,7 @@ void Tokenizer<T>::Tokenize(
     );
     tokens.reserve(expression.size());
 
-    std::vector<std::string> variableList = GetVariables(expression);
+    auto variableList = GetVariables(expression);
 
     if (variables.empty() && !variableList.empty())
     {
@@ -193,7 +193,7 @@ void Tokenizer<T>::InsertMultiplication(std::string & expression)
     std::string result;
     result.reserve(expression.size() * 2);
 
-    for (size_t i = 0; i < expression.size(); ++i)
+    for (auto i = 0U; i < expression.size(); i++)
     {
         result.push_back(expression[i]);
 
@@ -213,22 +213,27 @@ void Tokenizer<T>::InsertMultiplication(std::string & expression)
     expression = std::move(result);
 }
 
+constexpr int GetPrecedenceHelper(char operation)
+{
+    switch (operation)
+    {
+    case '+':
+    case '-':
+        return 1;
+    case '*':
+    case '/':
+        return 2;
+    case 'u': // Unary minus
+        return 3;
+    default:
+        return -1;
+    }
+}
+
 template <typename T>
 int Tokenizer<T>::GetPrecedence(char operation)
 {
-	switch (operation)
-	{
-	case '+':
-	case '-':
-		return 1;
-	case '*':
-	case '/':
-		return 2;
-    case 'u':               // Unary minus
-        return 3;
-	default:
-		return -1;
-	}
+    return GetPrecedenceHelper(operation);
 }
 
 template <typename T>
@@ -237,7 +242,7 @@ void Tokenizer<T>::InfixToPostfix(std::vector<Token<T>>& tokens)
     std::vector<Token<T>> postfix;
     postfix.reserve(tokens.size());
 
-    std::stack<Token<T>> opStack;
+    auto opStack = std::stack<Token<T>>{};
 
     for (size_t i = 0; i < tokens.size(); ++i)
     {
