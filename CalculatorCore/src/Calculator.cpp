@@ -22,7 +22,7 @@ Calculator<T>::~Calculator()
 }
 
 template <typename T>
-T Calculator<T>::Evaluate(std::string expression)
+T Calculator<T>::Evaluate(const std::string& expression)
 {
     VariableMap<T> variables;
     return EvaluateExpression(expression, variables);

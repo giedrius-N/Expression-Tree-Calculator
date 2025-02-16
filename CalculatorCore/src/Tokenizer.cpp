@@ -36,11 +36,11 @@ void Tokenizer<T>::Tokenize(
     {
         variables = PromptForVariableValues(variableList);
         // Insert '*' between numbers and variables to ensure correct parsing
+    }
+    if (!variableList.empty())
+    {
         InsertMultiplication(expression);
     }
-
-    std::string currentNumber;
-    std::string currentVariable;
 
     for (size_t i = 0; i < expression.size(); ++i)
     {
@@ -188,21 +188,29 @@ VariableMap<T> Tokenizer<T>::PromptForVariableValues(const std::vector<std::stri
 }
 
 template <typename T>
-void Tokenizer<T>::InsertMultiplication(std::string& expression)
+void Tokenizer<T>::InsertMultiplication(std::string & expression)
 {
     std::string result;
+    result.reserve(expression.size() * 2);
+
     for (size_t i = 0; i < expression.size(); ++i)
     {
-        result += expression[i];
+        result.push_back(expression[i]);
 
-        if (std::isdigit(expression[i]) 
-            && i + 1 < expression.size() 
-            && std::isalpha(expression[i + 1]))
+        if (i + 1 < expression.size())
         {
-            result += '*';
+            char current = expression[i];
+            char next = expression[i + 1];
+
+            if ((std::isdigit(current) && std::isalpha(next)) ||
+                (std::isalpha(current) && std::isdigit(next)))
+            {
+                result.push_back('*');
+            }
         }
     }
-    expression =  result;
+
+    expression = std::move(result);
 }
 
 template <typename T>

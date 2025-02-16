@@ -27,7 +27,7 @@ public:
 	/// </summary>
 	/// <param name="expression">String containing the mathematical expression.</param>
 	/// <returns>Evaluation result as set type.</returns>
-	T Evaluate(std::string expression);
+	T Evaluate(const std::string& expression);
 
 	/// <summary>
 	/// Evaluates a mathematical expression using a predefined set of variables.
@@ -42,7 +42,7 @@ private:
 	/// Evaluates the given expression using provided variables.
 	/// </summary>
 	/// <typeparam name="T">Numeric type used for evaluation.</typeparam>
-	T EvaluateExpression(std::string expression, VariableMap<T> variables);
+	static T EvaluateExpression(std::string expression, VariableMap<T> variables);
 };
 
 #endif // CALCULATOR_H

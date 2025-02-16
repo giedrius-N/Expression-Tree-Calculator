@@ -32,7 +32,7 @@ public:
 	/// <returns>Unique pointer to the root node of the expression tree.</returns>
 	std::unique_ptr<Node<T>> BuildExpressionTree(
 		const std::vector<Token<T>>& tokens, 
-		VariableMap<T>& variablePool
+		const VariableMap<T>& variablePool
 	);
 };
 
