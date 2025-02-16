@@ -32,23 +32,43 @@ std::unique_ptr<Node> ExpressionParser::BuildExpressionTree(
         }
         else if (token.GetType() == TokenType::OPERATOR)
         {
-            if (nodeStack.size() < 2)
+            char op = token.GetOperation();
+            // If unary minus
+            if (op == 'u')
             {
-                throw std::runtime_error("Invalid expression");
+                if (nodeStack.empty())
+                {
+                    throw std::runtime_error("Invalid expression: missing operand for unary minus.");
+                }
+                // Pop one operand and create a binary subtraction dummy 0 - operand.
+                auto operand = std::move(nodeStack.top());
+                nodeStack.pop();
+                nodeStack.push(
+                    std::make_unique<OperatorNode>(
+                        '-',
+                        std::make_unique<NumberNode>(0.0),
+                        std::move(operand)
+                        )
+                );
             }
-
-            auto right = std::move(nodeStack.top());
-            nodeStack.pop();
-            auto left = std::move(nodeStack.top());
-            nodeStack.pop();
-
-            nodeStack.push(
-                std::make_unique<OperatorNode>(
-                    token.GetOperation(), 
-                    std::move(left), 
-                    std::move(right)
-                )
-            );
+            else
+            {
+                if (nodeStack.size() < 2)
+                {
+                    throw std::runtime_error("Invalid expression");
+                }
+                auto right = std::move(nodeStack.top());
+                nodeStack.pop();
+                auto left = std::move(nodeStack.top());
+                nodeStack.pop();
+                nodeStack.push(
+                    std::make_unique<OperatorNode>(
+                        op,
+                        std::move(left),
+                        std::move(right)
+                        )
+                );
+            }
         }
     }
     
