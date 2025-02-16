@@ -11,6 +11,7 @@ void Tokenizer::Tokenize(
     bool returnPostfix
 )
 {
+    // Removing spaces
     expression.erase(
         std::remove_if(
             expression.begin(), 
@@ -23,7 +24,7 @@ void Tokenizer::Tokenize(
 
     std::vector<std::string> variableList = GetVariables(expression);
 
-    if (!variableList.empty())
+    if (variables.empty() && !variableList.empty())
     {
         variables = PromptForVariableValues(variableList);
         // Insert '*' between numbers and variables to ensure correct parsing
@@ -33,52 +34,83 @@ void Tokenizer::Tokenize(
     std::string currentNumber;
     std::string currentVariable;
 
-    for (char character : expression)
+    for (size_t i = 0; i < expression.size(); ++i)
     {
-        if (std::isdigit(character) || character == '.')
+        char c = expression[i];
+
+        // Check if the character is a minus, that might be a unary minus.
+        if (c == '-')
         {
-            if (!currentVariable.empty())
+            bool isUnary = false;
+            // If it's the first character, it must be unary.
+            if (i == 0)
             {
-                tokens.emplace_back(currentVariable);
-                currentVariable.clear();
+                isUnary = true;
             }
-            currentNumber += character;
+            else
+            {
+                char prev = expression[i - 1];
+                // If the previous character is not a digit or a closing parenthesis,
+                // then this minus is unary.
+                if (!std::isdigit(prev) && prev != ')')
+                {
+                    isUnary = true;
+                }
+            }
+
+            if (isUnary && i + 1 < expression.size() && (std::isdigit(expression[i + 1]) || expression[i + 1] == '.'))
+            {
+                std::string numberStr = "-";
+                i++;
+
+                // Accumulate the number characters.
+                while (i < expression.size() && (std::isdigit(expression[i]) || expression[i] == '.'))
+                {
+                    numberStr.push_back(expression[i]);
+                    i++;
+                }
+                // Convert the accumulated string to a number and add it as a token.
+                tokens.emplace_back(std::stod(numberStr));
+                i--; // Adjust index (the for-loop will increment it).
+                continue;
+            }
+            else
+            {
+                tokens.emplace_back(c);
+            }
         }
-        else if (std::isalpha(character))
+        else if (std::isdigit(c) || c == '.')
         {
-            if (!currentNumber.empty())
+            // Build a number token.
+            std::string numStr;
+            while (i < expression.size() && (std::isdigit(expression[i]) || expression[i] == '.'))
             {
-                tokens.emplace_back(std::stod(currentNumber));
-                currentNumber.clear();
+                numStr.push_back(expression[i]);
+                i++;
             }
-            currentVariable += character;
+            tokens.emplace_back(std::stod(numStr));
+            i--;
+        }
+        else if (std::isalpha(c))
+        {
+            // Build a variable token.
+            std::string varStr;
+            while (i < expression.size() && std::isalpha(expression[i]))
+            {
+                varStr.push_back(expression[i]);
+                i++;
+            }
+            tokens.emplace_back(varStr);
+            i--;
+        }
+        else if (IsOperator(c) || IsParenthesis(c))
+        {
+            tokens.emplace_back(c);
         }
         else
         {
-            if (!currentNumber.empty())
-            {
-                tokens.emplace_back(std::stod(currentNumber));
-                currentNumber.clear();
-            }
-            if (!currentVariable.empty())
-            {
-                tokens.emplace_back(currentVariable);
-                currentVariable.clear();
-            }
-            if (IsOperator(character) || IsParenthesis(character))
-            {
-                tokens.emplace_back(character);
-            }
+            throw std::runtime_error(std::string("Unexpected character: ") + c);
         }
-    }
-
-    if (!currentNumber.empty())
-    {
-        tokens.emplace_back(std::stod(currentNumber));
-    }
-    if (!currentVariable.empty())
-    {
-        tokens.emplace_back(currentVariable);
     }
 
 	if (returnPostfix)
@@ -171,11 +203,12 @@ int Tokenizer::GetPrecedence(char operation)
 	case '*':
 	case '/':
 		return 2;
+    case 'u':
+        return 3;
 	default:
 		return -1;
 	}
 }
-
 void Tokenizer::InfixToPostfix(std::vector<Token>& tokens)
 {
     std::vector<Token> postfix;
@@ -194,24 +227,21 @@ void Tokenizer::InfixToPostfix(std::vector<Token>& tokens)
         }
         else if (IsOperator(current.GetOperation()))
         {
+            // Determine if minus is an unary minus.
             char op = current.GetOperation();
-
-            // Determine if '-' is acting as a unary minus.
             bool isUnaryMinus = false;
             if (op == '-')
             {
-                // If it's the first token then this minus is unary.
                 if (i == 0)
                 {
                     isUnaryMinus = true;
                 }
                 else
                 {
-                    // Get the token one before current
                     const Token& prev = tokens[i - 1];
-                    // If the previous token is an operator (but not a closing ')'),
-                    // then there is no left-hand operand, so minus is unary. 
-                    if (prev.GetType() == TokenType::OPERATOR && prev.GetOperation() != ')')
+                    // If the previous token is not a number and not a variable,
+                    // then there is no valid left-hand operand.
+                    if (prev.GetType() != TokenType::NUMBER && prev.GetType() != TokenType::VARIABLE)
                     {
                         isUnaryMinus = true;
                     }
@@ -220,18 +250,29 @@ void Tokenizer::InfixToPostfix(std::vector<Token>& tokens)
 
             if (isUnaryMinus)
             {
-                // Insert a dummy zero to convert unary minus into binary subtraction.
-                postfix.push_back(Token(0.0));
+                // Creating unary minus operation
+                Token unaryMinus('u');
+                while (!opStack.empty() &&
+                    IsOperator(opStack.top().GetOperation()) &&
+                    GetPrecedence(opStack.top().GetOperation()) >= GetPrecedence('u'))
+                {
+                    postfix.push_back(opStack.top());
+                    opStack.pop();
+                }
+                opStack.push(unaryMinus);
             }
-
-            while (!opStack.empty() &&
-                IsOperator(opStack.top().GetOperation()) &&
-                GetPrecedence(opStack.top().GetOperation()) >= GetPrecedence(op))
+            else
             {
-                postfix.push_back(opStack.top());
-                opStack.pop();
+                // Process as a normal binary operator.
+                while (!opStack.empty() &&
+                    IsOperator(opStack.top().GetOperation()) &&
+                    GetPrecedence(opStack.top().GetOperation()) >= GetPrecedence(op))
+                {
+                    postfix.push_back(opStack.top());
+                    opStack.pop();
+                }
+                opStack.push(current);
             }
-            opStack.push(current);
         }
         else if (IsParenthesis(current.GetOperation()))
         {
@@ -267,3 +308,4 @@ void Tokenizer::InfixToPostfix(std::vector<Token>& tokens)
 
     tokens = std::move(postfix);
 }
+

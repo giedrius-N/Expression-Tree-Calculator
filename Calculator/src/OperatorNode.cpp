@@ -26,7 +26,7 @@ double OperatorNode::Evaluate() const
 	case '*':
 		return leftValue * rightValue;
 	case '/':
-		if (leftValue != 0)
+		if (rightValue != 0)
 		{
 			return leftValue / rightValue;
 		}

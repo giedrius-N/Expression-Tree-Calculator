@@ -3,15 +3,21 @@
 
 int main()
 {
-	//std::string expression = "10 + 20x + 20 / 5";
-	//std::string expression = "10 + 20x + 20 / 5 + 2";
-	std::string expression = "10 + 1x * (-1)";
-	Calculator calc;
+    std::cout << "Enter a mathematical expression: ";
+    std::string expression;
+    std::getline(std::cin, expression);
 
-	double result = calc.Evaluate(expression);
-
-	std::cout << "Mathematical expression: " << expression << std::endl;
-	std::cout << "The result: " << result << std::endl;
+    Calculator calc;
+    try
+    {
+        double result = calc.Evaluate(expression);
+        std::cout << "Mathematical expression: " << expression << std::endl;
+        std::cout << "The result: " << result << std::endl;
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Error evaluating expression: " << e.what() << std::endl;
+    }
 
 	return 0;
 }
