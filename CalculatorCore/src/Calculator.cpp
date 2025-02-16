@@ -24,6 +24,7 @@ double Calculator::Evaluate(std::string expression)
 	catch (const std::exception& e)
 	{
 		std::cerr << "Error: " << e.what() << std::endl;
+        throw;
  	}
 
 	ExpressionParser parser;
@@ -36,6 +37,7 @@ double Calculator::Evaluate(std::string expression)
 	catch (const std::exception& e)
 	{
 		std::cerr << "Error: " << e.what() << std::endl;
+        throw;
 	}
 
 	return result;
@@ -54,6 +56,7 @@ double Calculator::Evaluate(const std::string& expression, const VariableMap& pr
     catch (const std::exception& e)
     {
         std::cerr << "Error: " << e.what() << std::endl;
+        throw;
     }
 
     ExpressionParser parser;
@@ -66,6 +69,7 @@ double Calculator::Evaluate(const std::string& expression, const VariableMap& pr
     catch (const std::exception& e)
     {
         std::cerr << "Error: " << e.what() << std::endl;
+        throw;
     }
 
     return result;
