@@ -24,7 +24,7 @@ ExpressionParser<T>::~ExpressionParser()
 template <typename T>
 std::unique_ptr<Node<T>> ExpressionParser<T>::BuildExpressionTree(
     const std::vector<Token<T>>& tokens, 
-    VariableMap<T>& variablePool
+    const VariableMap<T>& variablePool
 )
 {
     std::stack<std::unique_ptr<Node<T>>> nodeStack;
@@ -90,7 +90,7 @@ std::unique_ptr<Node<T>> ExpressionParser<T>::BuildExpressionTree(
     }
     
     // Verify that the stack contains exactly one node, representing the final result.
-    if (nodeStack.size() != 1 || nodeStack.empty())
+    if (nodeStack.size() != 1)
     {
         throw std::runtime_error("Invalid expression");
     }

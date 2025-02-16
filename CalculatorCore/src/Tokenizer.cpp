@@ -42,9 +42,6 @@ void Tokenizer<T>::Tokenize(
         InsertMultiplication(expression);
     }
 
-    std::string currentNumber;
-    std::string currentVariable;
-
     for (size_t i = 0; i < expression.size(); ++i)
     {
         char c = expression[i];

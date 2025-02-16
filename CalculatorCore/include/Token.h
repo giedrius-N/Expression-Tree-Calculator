@@ -75,7 +75,7 @@ public:
     /// Gets the variable name of the token.
     /// </summary>
     /// <returns>Variable name as a string.</returns>
-    std::string GetVariable() const { return m_variable; }
+    const std::string& GetVariable() const { return m_variable; }
 
 private:
     TokenType m_type;

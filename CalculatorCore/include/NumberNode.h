@@ -14,7 +14,7 @@ public:
 	/// Creates a NumberNode with a given value.
 	/// </summary>
 	/// <param name="value">The numeric value.</param>
-	NumberNode(T value);
+	explicit NumberNode(T value);
 	
 	/// <summary>
 	/// Evaluates and returns the stored numeric value.
