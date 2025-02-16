@@ -3,7 +3,9 @@
 
 int main()
 {
-	std::string expression = "10 + 20x + 20 / 5";
+	//std::string expression = "10 + 20x + 20 / 5";
+	//std::string expression = "10 + 20x + 20 / 5 + 2";
+	std::string expression = "10 + 1x * (-1)";
 	Calculator calc;
 
 	double result = calc.Evaluate(expression);

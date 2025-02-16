@@ -183,32 +183,63 @@ void Tokenizer::InfixToPostfix(std::vector<Token>& tokens)
 
     std::stack<Token> opStack;
 
-    for (const auto& token : tokens)
+    for (size_t i = 0; i < tokens.size(); ++i)
     {
-        // Push numbers and variables directly to the output.
-        if (token.GetType() == TokenType::NUMBER || token.GetType() == TokenType::VARIABLE)
+        const Token& current = tokens[i];
+
+        if (current.GetType() == TokenType::NUMBER || current.GetType() == TokenType::VARIABLE)
         {
-            postfix.push_back(token);
+            // Numbers and variables go directly to the output.
+            postfix.push_back(current);
         }
-        else if (IsOperator(token.GetOperation()))
+        else if (IsOperator(current.GetOperation()))
         {
-            // While there is an operator on the stack with greater or equal precedence,
-            // pop it to the output.
-            while (!opStack.empty() && IsOperator(opStack.top().GetOperation()) &&
-                GetPrecedence(opStack.top().GetOperation()) >= GetPrecedence(token.GetOperation()))
+            char op = current.GetOperation();
+
+            // Determine if '-' is acting as a unary minus.
+            bool isUnaryMinus = false;
+            if (op == '-')
+            {
+                // If it's the first token then this minus is unary.
+                if (i == 0)
+                {
+                    isUnaryMinus = true;
+                }
+                else
+                {
+                    // Get the token one before current
+                    const Token& prev = tokens[i - 1];
+                    // If the previous token is an operator (but not a closing ')'),
+                    // then there is no left-hand operand, so minus is unary. 
+                    if (prev.GetType() == TokenType::OPERATOR && prev.GetOperation() != ')')
+                    {
+                        isUnaryMinus = true;
+                    }
+                }
+            }
+
+            if (isUnaryMinus)
+            {
+                // Insert a dummy zero to convert unary minus into binary subtraction.
+                postfix.push_back(Token(0.0));
+            }
+
+            while (!opStack.empty() &&
+                IsOperator(opStack.top().GetOperation()) &&
+                GetPrecedence(opStack.top().GetOperation()) >= GetPrecedence(op))
             {
                 postfix.push_back(opStack.top());
                 opStack.pop();
             }
-            opStack.push(token);
+            opStack.push(current);
         }
-        else if (IsParenthesis(token.GetOperation()))
+        else if (IsParenthesis(current.GetOperation()))
         {
-            if (token.GetOperation() == '(')
+            if (current.GetOperation() == '(')
             {
-                opStack.push(token);
+                opStack.push(current);
             }
-            else if (token.GetOperation() == ')')
+            else // ')'
             {
                 while (!opStack.empty() && opStack.top().GetOperation() != '(')
                 {
