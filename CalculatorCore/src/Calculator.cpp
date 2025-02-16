@@ -4,54 +4,39 @@
 #include "Types.h"
 #include <iostream>
 
-Calculator::Calculator()
+template class Calculator<double>;
+
+template <typename T>
+Calculator<T>::Calculator()
 {
 }
 
-Calculator::~Calculator()
+template <typename T>
+Calculator<T>::~Calculator()
 {
 }
 
-double Calculator::Evaluate(std::string expression)
+template <typename T>
+T Calculator<T>::Evaluate(std::string expression)
 {
-	std::vector<Token> tokens;
-	VariableMap variables;
-
-	try 
-	{
-		Tokenizer::Tokenize(expression, tokens, variables);
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << "Error: " << e.what() << std::endl;
-        throw;
- 	}
-
-	ExpressionParser parser;
-	double result = 0.0;
-	try
-	{
-		auto root = parser.BuildExpressionTree(tokens, variables);
-		result = root->Evaluate();
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << "Error: " << e.what() << std::endl;
-        throw;
-	}
-
-	return result;
+    VariableMap<T> variables;
+    return EvaluateExpression(expression, variables);
 }
 
-double Calculator::Evaluate(const std::string& expression, const VariableMap& predefinedVariables)
+template <typename T>
+T Calculator<T>::Evaluate(const std::string& expression, const VariableMap<T>& predefinedVariables)
 {
-    std::vector<Token> tokens;
-    // Use the predefined variables.
-    VariableMap variables = predefinedVariables;
+    return EvaluateExpression(expression, predefinedVariables);
+}
+
+template <typename T>
+T Calculator<T>::EvaluateExpression(std::string expression, VariableMap<T> variables)
+{
+    std::vector<Token<T>> tokens;
 
     try
     {
-        Tokenizer::Tokenize(const_cast<std::string&>(expression), tokens, variables);
+        Tokenizer<T>::Tokenize(expression, tokens, variables);
     }
     catch (const std::exception& e)
     {
@@ -59,8 +44,8 @@ double Calculator::Evaluate(const std::string& expression, const VariableMap& pr
         throw;
     }
 
-    ExpressionParser parser;
-    double result = 0.0;
+    ExpressionParser<T> parser;
+    T result = 0.0;
     try
     {
         auto root = parser.BuildExpressionTree(tokens, variables);

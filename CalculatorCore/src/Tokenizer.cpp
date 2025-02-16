@@ -4,10 +4,13 @@
 #include <iostream>
 #include <unordered_set>
 
-void Tokenizer::Tokenize(
+template class Tokenizer<double>;
+
+template <typename T>
+void Tokenizer<T>::Tokenize(
     std::string& expression, 
-    std::vector<Token>& tokens, 
-    VariableMap& variables, 
+    std::vector<Token<T>>& tokens, 
+    VariableMap<T>& variables, 
     bool returnPostfix
 )
 {
@@ -119,17 +122,20 @@ void Tokenizer::Tokenize(
 	}
 }
 
-bool Tokenizer::IsOperator(char c)
+template <typename T>
+bool Tokenizer<T>::IsOperator(char c)
 {
 	return c == '+' || c == '-' || c == '*' || c == '/';
 }
 
-bool Tokenizer::IsParenthesis(char c)
+template <typename T>
+bool Tokenizer<T>::IsParenthesis(char c)
 {
 	return c == '(' || c == ')';
 }
 
-std::vector<std::string> Tokenizer::GetVariables(const std::string& expression)
+template <typename T>
+std::vector<std::string> Tokenizer<T>::GetVariables(const std::string& expression)
 {
     std::vector<std::string> variables;
     std::unordered_set<std::string> seen;
@@ -160,10 +166,10 @@ std::vector<std::string> Tokenizer::GetVariables(const std::string& expression)
 
     return variables;
 }
-
-VariableMap Tokenizer::PromptForVariableValues(const std::vector<std::string>& variableList)
+template <typename T>
+VariableMap<T> Tokenizer<T>::PromptForVariableValues(const std::vector<std::string>& variableList)
 {
-    VariableMap variableValues;
+    VariableMap<T> variableValues;
 
     for (const auto& var : variableList)
     {
@@ -176,7 +182,8 @@ VariableMap Tokenizer::PromptForVariableValues(const std::vector<std::string>& v
     return variableValues;
 }
 
-void Tokenizer::InsertMultiplication(std::string& expression)
+template <typename T>
+void Tokenizer<T>::InsertMultiplication(std::string& expression)
 {
     std::string result;
     for (size_t i = 0; i < expression.size(); ++i)
@@ -193,7 +200,8 @@ void Tokenizer::InsertMultiplication(std::string& expression)
     expression =  result;
 }
 
-int Tokenizer::GetPrecedence(char operation)
+template <typename T>
+int Tokenizer<T>::GetPrecedence(char operation)
 {
 	switch (operation)
 	{
@@ -209,16 +217,18 @@ int Tokenizer::GetPrecedence(char operation)
 		return -1;
 	}
 }
-void Tokenizer::InfixToPostfix(std::vector<Token>& tokens)
+
+template <typename T>
+void Tokenizer<T>::InfixToPostfix(std::vector<Token<T>>& tokens)
 {
-    std::vector<Token> postfix;
+    std::vector<Token<double>> postfix;
     postfix.reserve(tokens.size());
 
-    std::stack<Token> opStack;
+    std::stack<Token<double>> opStack;
 
     for (size_t i = 0; i < tokens.size(); ++i)
     {
-        const Token& current = tokens[i];
+        const Token<double>& current = tokens[i];
 
         if (current.GetType() == TokenType::NUMBER || current.GetType() == TokenType::VARIABLE)
         {
@@ -238,7 +248,7 @@ void Tokenizer::InfixToPostfix(std::vector<Token>& tokens)
                 }
                 else
                 {
-                    const Token& prev = tokens[i - 1];
+                    const Token<double>& prev = tokens[i - 1];
                     // If the previous token is not a number and not a variable,
                     // then there is no valid left-hand operand.
                     if (prev.GetType() != TokenType::NUMBER && prev.GetType() != TokenType::VARIABLE)
@@ -251,7 +261,7 @@ void Tokenizer::InfixToPostfix(std::vector<Token>& tokens)
             if (isUnaryMinus)
             {
                 // Creating unary minus operation
-                Token unaryMinus('u');
+                Token<double> unaryMinus('u');
                 while (!opStack.empty() &&
                     IsOperator(opStack.top().GetOperation()) &&
                     GetPrecedence(opStack.top().GetOperation()) >= GetPrecedence('u'))

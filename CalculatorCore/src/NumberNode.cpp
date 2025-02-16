@@ -1,10 +1,14 @@
 #include "NumberNode.h"
 
-NumberNode::NumberNode(double value) : m_value(value)
+template class NumberNode<double>;
+
+template <typename T>
+NumberNode<T>::NumberNode(T value) : m_value(value)
 {
 }
 
-double NumberNode::Evaluate() const
+template <typename T>
+T NumberNode<T>::Evaluate() const
 {
 	return m_value;
 }

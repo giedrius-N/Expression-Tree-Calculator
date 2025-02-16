@@ -15,6 +15,7 @@ enum class TokenType
 /// <summary>
 /// Represents a token in the expression, which can be a number or an operator.
 /// </summary>
+template <typename T>
 class Token
 {
 public:
@@ -22,7 +23,7 @@ public:
 	/// Constructor for number value token
 	/// </summary>
 	/// <param name="number">Double type number value</param>
-	Token(double number);
+	Token(T number);
 
 	/// <summary>
 	/// Constructor for math operation token
@@ -46,7 +47,7 @@ public:
 	/// Gets the numeric value of the token.
 	/// </summary>
 	/// <returns>Double value of the token.</returns>
-	double GetNumber() const;
+	T GetNumber() const;
 	
 	/// <summary>
 	/// Gets the operator character.
@@ -64,7 +65,7 @@ private:
 	// Type of the token
 	TokenType m_type;
 	// Numeric value (if token is a number)
-	double m_number;
+	T m_number;
 	// Operator character (if token is an operator)
 	char m_operation;
 	// Variable in string

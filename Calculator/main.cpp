@@ -7,11 +7,10 @@ int main()
     std::string expression;
     std::getline(std::cin, expression);
 
-    Calculator calc;
+    Calculator<double> calc;
     try
     {
         double result = calc.Evaluate(expression);
-        std::cout << "Mathematical expression: " << expression << std::endl;
         std::cout << "The result: " << result << std::endl;
     }
     catch (const std::exception& e)
