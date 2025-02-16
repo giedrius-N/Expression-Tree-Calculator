@@ -116,3 +116,24 @@ TYPED_TEST(CalculatorTest, VariableWithZero)
     };
     EXPECT_EQ(this->calc.Evaluate("x+y", vars), static_cast<TypeParam>(10));
 }
+
+TYPED_TEST(CalculatorTest, LetterFollowedByDigit)
+{
+    VariableMap<TypeParam> vars = { {"x", static_cast<TypeParam>(5)} };
+    EXPECT_EQ(this->calc.Evaluate("x20", vars), static_cast<TypeParam>(100));
+}
+
+TYPED_TEST(CalculatorTest, DigitFollowedByLetter)
+{
+    VariableMap<TypeParam> vars = { {"x", static_cast<TypeParam>(3)} };
+    EXPECT_EQ(this->calc.Evaluate("20x", vars), static_cast<TypeParam>(60));
+}
+
+TYPED_TEST(CalculatorTest, MixedLetterDigitMultiplication)
+{
+    VariableMap<TypeParam> vars = {
+        {"a", static_cast<TypeParam>(2)},
+        {"b", static_cast<TypeParam>(3)}
+    };
+    EXPECT_EQ(this->calc.Evaluate("a10+b20", vars), static_cast<TypeParam>(80));
+}
