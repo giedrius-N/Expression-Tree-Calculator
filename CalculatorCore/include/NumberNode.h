@@ -5,24 +5,26 @@
 /// <summary>
 /// Node representing a numeric value (leaf node).
 /// </summary>
-class NumberNode : public Node
+/// <typeparam name="T">Numeric type.</typeparam>
+template <typename T>
+class NumberNode : public Node<T>
 {
 public:
 	/// <summary>
 	/// Creates a NumberNode with a given value.
 	/// </summary>
 	/// <param name="value">The numeric value.</param>
-	NumberNode(double value);
+	NumberNode(T value);
 	
 	/// <summary>
 	/// Evaluates and returns the stored numeric value.
 	/// </summary>
-	/// <returns>Numeric value as double.</returns>
-	double Evaluate() const override;
+	/// <returns>Numeric value.</returns>
+	T Evaluate() const override;
 
 private:
 	// Stored numeric value.
-	double m_value;
+	T m_value;
 };
 
 #endif // NUMBERNODE_H

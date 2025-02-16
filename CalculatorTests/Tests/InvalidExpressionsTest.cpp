@@ -1,50 +1,42 @@
-#include "Calculator.h"
+#include "CalculatorTestFixture.h"
 #include <gtest/gtest.h>
 
-TEST(CalculatorTest, MissingOperand)
+TYPED_TEST(CalculatorTest, MissingOperand)
 {
-    Calculator calc;
-    EXPECT_THROW(calc.Evaluate("2+"), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("2+"), std::runtime_error);
 }
 
-TEST(CalculatorTest, ConsecutiveOperators)
+TYPED_TEST(CalculatorTest, ConsecutiveOperators)
 {
-    Calculator calc;
-    EXPECT_THROW(calc.Evaluate("2++2"), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("2++2"), std::runtime_error);
 }
 
-TEST(CalculatorTest, InvalidCharacters)
+TYPED_TEST(CalculatorTest, InvalidCharacters)
 {
-    Calculator calc;
-    EXPECT_THROW(calc.Evaluate("2&2"), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("2&2"), std::runtime_error);
 }
 
-TEST(CalculatorTest, EmptyExpression)
+TYPED_TEST(CalculatorTest, EmptyExpression)
 {
-    Calculator calc;
-    EXPECT_THROW(calc.Evaluate(""), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate(""), std::runtime_error);
 }
 
-TEST(CalculatorTest, OnlyOperator)
+TYPED_TEST(CalculatorTest, OnlyOperator)
 {
-    Calculator calc;
-    EXPECT_THROW(calc.Evaluate("+"), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("+"), std::runtime_error);
 }
 
-TEST(CalculatorTest, PowerOperation)
+TYPED_TEST(CalculatorTest, PowerOperation)
 {
-    Calculator calc;
-    EXPECT_THROW(calc.Evaluate("2^3"), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("2^3"), std::runtime_error);
 }
 
-TEST(CalculatorTest, GarbageWhitespace)
+TYPED_TEST(CalculatorTest, GarbageWhitespace)
 {
-    Calculator calc;
-    EXPECT_THROW(calc.Evaluate("   \t\n "), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("   \t\n "), std::runtime_error);
 }
 
-TEST(CalculatorTest, RandomSymbols)
+TYPED_TEST(CalculatorTest, RandomSymbols)
 {
-    Calculator calc;
-    EXPECT_THROW(calc.Evaluate("@#$%"), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("@#$%"), std::runtime_error);
 }

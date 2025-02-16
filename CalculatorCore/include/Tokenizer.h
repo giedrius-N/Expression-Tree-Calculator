@@ -7,6 +7,8 @@
 /// <summary>
 /// Static Tokenizer class to convert an expression string into tokens.
 /// </summary>
+/// <typeparam name="T">Numeric type.</typeparam>
+template <typename T>
 class Tokenizer
 {
 public:
@@ -22,7 +24,12 @@ public:
 	/// <param name="tokens">The output vector of tokens.</param>
 	/// <param name="variables">Variable pool for symbolic variables in expression.</param>
 	/// <param name="returnPostfix">Flag to tell if return tokens in postfix form. Default is true</param>
-	static void Tokenize(std::string& expression, std::vector<Token>& tokens, VariableMap& variables, bool returnPostfix = true);
+	static void Tokenize(
+		std::string& expression, 
+		std::vector<Token<T>>& tokens, 
+		VariableMap<T>& variables, 
+		bool returnPostfix = true
+	);
 
 private:
 	/// <summary>
@@ -43,7 +50,7 @@ private:
 	/// Converts an infix expression token list to postfix.
 	/// </summary>
 	/// <param name="tokens">Reference to the vector of tokens to convert.</param>
-	static void InfixToPostfix(std::vector<Token>& tokens);
+	static void InfixToPostfix(std::vector<Token<T>>& tokens);
 
 	/// <summary>
 	/// Gets the precedence of the given operator.
@@ -64,7 +71,9 @@ private:
 	/// </summary>
 	/// <param name="variableList">List of variables requiring user input.</param>
 	/// <returns>A VariableMap containing variable names and their values.</returns>
-	static VariableMap PromptForVariableValues(const std::vector<std::string>& variableList);
+	static VariableMap<T> PromptForVariableValues(
+		const std::vector<std::string>& variableList
+	);
 
 	/// <summary>
 	/// Inserts multiplication operators between numbers and variables where omitted.

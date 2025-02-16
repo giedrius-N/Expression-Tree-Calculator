@@ -4,8 +4,9 @@
 #include <string>
 
 /// <summary>
-/// Type alias for a map storing variable names as strings and their corresponding double values.
+/// Type alias for a map storing variable names as strings and their corresponding set type values.
 /// </summary>
-typedef std::unordered_map<std::string, double> VariableMap;
+template <typename T>
+using VariableMap = std::unordered_map<std::string, T>;
 
 #endif // TYPES_H

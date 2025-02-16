@@ -24,6 +24,7 @@ add_executable(${PROJECT_NAME}
     Tests/VariableSubstitutionTest.cpp
     Tests/InvalidExpressionsTest.cpp
     Tests/ComplexExpressionsTest.cpp
+    Tests/CalculatorTestFixture.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE

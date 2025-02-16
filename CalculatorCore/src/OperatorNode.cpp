@@ -1,10 +1,18 @@
 #include "OperatorNode.h"
 #include <stdexcept>
 
-OperatorNode::OperatorNode(
+/// <summary>
+/// Initializing OperatorNode with three main and tested types: double, float, and int.
+/// </summary>
+template class OperatorNode<double>;
+template class OperatorNode<float>;
+template class OperatorNode<int>;
+
+template <typename T>
+OperatorNode<T>::OperatorNode(
 	char operation, 
-	std::unique_ptr<Node> left, 
-	std::unique_ptr<Node> right
+	std::unique_ptr<Node<T>> left, 
+	std::unique_ptr<Node<T>> right
 )
 	: m_operation(operation)
 	, m_left(std::move(left))
@@ -12,10 +20,11 @@ OperatorNode::OperatorNode(
 {
 }
 
-double OperatorNode::Evaluate() const
+template <typename T>
+T OperatorNode<T>::Evaluate() const
 {
-	double leftValue = m_left->Evaluate();
-	double rightValue = m_right->Evaluate();
+	T leftValue = m_left->Evaluate();
+	T rightValue = m_right->Evaluate();
 
 	switch (m_operation)
 	{

@@ -4,33 +4,43 @@
 #include <stack>
 #include <stdexcept>
 
-ExpressionParser::ExpressionParser()
+/// <summary>
+/// Initializing ExpressionParser with three main and tested types: double, float, and int.
+/// </summary>
+template class ExpressionParser<double>;
+template class ExpressionParser<float>;
+template class ExpressionParser<int>;
+
+template <typename T>
+ExpressionParser<T>::ExpressionParser()
 {
 }
 
-ExpressionParser::~ExpressionParser()
+template <typename T>
+ExpressionParser<T>::~ExpressionParser()
 {
 }
 
-std::unique_ptr<Node> ExpressionParser::BuildExpressionTree(
-    const std::vector<Token>& tokens, 
-    VariableMap& variablePool
+template <typename T>
+std::unique_ptr<Node<T>> ExpressionParser<T>::BuildExpressionTree(
+    const std::vector<Token<T>>& tokens, 
+    VariableMap<T>& variablePool
 )
 {
-    std::stack<std::unique_ptr<Node>> nodeStack;
+    std::stack<std::unique_ptr<Node<T>>> nodeStack;
 
     for (const auto& token : tokens)
     {
         if (token.GetType() == TokenType::NUMBER)
         {
-            nodeStack.push(std::make_unique<NumberNode>(token.GetNumber()));
+            nodeStack.push(std::make_unique<NumberNode<T>>(token.GetNumber()));
         }
         else if (token.GetType() == TokenType::VARIABLE)
         {
             try
             {
-                double value = variablePool.at(token.GetVariable());
-                nodeStack.push(std::make_unique<NumberNode>(value));
+                T value = variablePool.at(token.GetVariable());
+                nodeStack.push(std::make_unique<NumberNode<T>>(value));
             }
             catch (const std::out_of_range&)
             {
@@ -51,9 +61,9 @@ std::unique_ptr<Node> ExpressionParser::BuildExpressionTree(
                 auto operand = std::move(nodeStack.top());
                 nodeStack.pop();
                 nodeStack.push(
-                    std::make_unique<OperatorNode>(
+                    std::make_unique<OperatorNode<T>>(
                         '-',
-                        std::make_unique<NumberNode>(0.0),
+                        std::make_unique<NumberNode<T>>(static_cast<T>(0.0)),
                         std::move(operand)
                         )
                 );
@@ -69,7 +79,7 @@ std::unique_ptr<Node> ExpressionParser::BuildExpressionTree(
                 auto left = std::move(nodeStack.top());
                 nodeStack.pop();
                 nodeStack.push(
-                    std::make_unique<OperatorNode>(
+                    std::make_unique<OperatorNode<T>>(
                         op,
                         std::move(left),
                         std::move(right)
@@ -85,7 +95,7 @@ std::unique_ptr<Node> ExpressionParser::BuildExpressionTree(
         throw std::runtime_error("Invalid expression");
     }
 
-    std::unique_ptr<Node> result = std::move(nodeStack.top());
+    std::unique_ptr<Node<T>> result = std::move(nodeStack.top());
     nodeStack.pop();
 
     return result;

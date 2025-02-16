@@ -1,50 +1,43 @@
 #include "Calculator.h"
+#include "CalculatorTestFixture.h"
 #include <gtest/gtest.h>
 
-TEST(CalculatorTest, BasicAddition)
+TYPED_TEST(CalculatorTest, BasicAddition)
 {
-    Calculator calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("3+5"), 8.0);
+    EXPECT_EQ(this->calc.Evaluate("3+5"), static_cast<TypeParam>(8));
 }
 
-TEST(CalculatorTest, BasicSubtraction)
+TYPED_TEST(CalculatorTest, BasicSubtraction)
 {
-    Calculator calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("10-3"), 7.0);
+    EXPECT_EQ(this->calc.Evaluate("10-3"), static_cast<TypeParam>(7));
 }
 
-TEST(CalculatorTest, BasicMultiplication)
+TYPED_TEST(CalculatorTest, BasicMultiplication)
 {
-    Calculator calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("4*2"), 8.0);
+    EXPECT_EQ(this->calc.Evaluate("4*2"), static_cast<TypeParam>(8));
 }
 
-TEST(CalculatorTest, BasicDivision)
+TYPED_TEST(CalculatorTest, BasicDivision)
 {
-    Calculator calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("8/4"), 2.0);
+    EXPECT_EQ(this->calc.Evaluate("8/4"), static_cast<TypeParam>(2));
 }
 
-TEST(CalculatorTest, DivisionByZero)
+TYPED_TEST(CalculatorTest, DivisionByZero)
 {
-    Calculator calc;
-    EXPECT_THROW(calc.Evaluate("5/0"), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("5/0"), std::runtime_error);
 }
 
-TEST(CalculatorTest, WhiteSpaces)
+TYPED_TEST(CalculatorTest, WhiteSpaces)
 {
-    Calculator calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate(" 2 +  3 * 4 "), 14.0);
+    EXPECT_EQ(this->calc.Evaluate(" 2 +  3 * 4 "), static_cast<TypeParam>(14));
 }
 
-TEST(CalculatorTest, BasicMixedOperations)
+TYPED_TEST(CalculatorTest, BasicMixedOperations)
 {
-    Calculator calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("2+3*4-1"), 13.0);
+    EXPECT_EQ(this->calc.Evaluate("2+3*4-1"), static_cast<TypeParam>(13));
 }
 
-TEST(CalculatorTest, BasicParentheses)
+TYPED_TEST(CalculatorTest, BasicParentheses)
 {
-    Calculator calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("(2+3)*4"), 20.0);
+    EXPECT_EQ(this->calc.Evaluate("(2+3)*4"), static_cast<TypeParam>(20));
 }

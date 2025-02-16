@@ -1,100 +1,118 @@
-#include "Calculator.h"
+#include "CalculatorTestFixture.h"
 #include <gtest/gtest.h>
 
-TEST(CalculatorTest, VariableWithUnaryMinus)
+TYPED_TEST(CalculatorTest, VariableWithUnaryMinus)
 {
-    Calculator calc;
-    VariableMap vars = { {"x", 5.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("-x", vars), -5.0);
+    VariableMap<TypeParam> vars = { {"x", static_cast<TypeParam>(5)} };
+    EXPECT_EQ(this->calc.Evaluate("-x", vars), static_cast<TypeParam>(-5));
 }
 
-TEST(CalculatorTest, MultipleVariablesMixedOperations)
+TYPED_TEST(CalculatorTest, MultipleVariablesMixedOperations)
 {
-    Calculator calc;
-    VariableMap vars = { {"x", 4.0}, {"y", 2.0}, {"z", 3.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("x*y+z", vars), 11.0);
+    VariableMap<TypeParam> vars = { 
+        {"x", static_cast<TypeParam>(4)}, 
+        {"y", static_cast<TypeParam>(2)}, 
+        {"z", static_cast<TypeParam>(3)} 
+    };
+    EXPECT_EQ(this->calc.Evaluate("x*y+z", vars), static_cast<TypeParam>(11));
 }
 
-TEST(CalculatorTest, VariablesWithParentheses)
+TYPED_TEST(CalculatorTest, VariablesWithParentheses)
 {
-    Calculator calc;
-    VariableMap vars = { {"a", 8.0}, {"b", 2.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("(a+b)*b", vars), 20.0);
+    VariableMap<TypeParam> vars = { 
+        {"a", static_cast<TypeParam>(8)}, 
+        {"b", static_cast<TypeParam>(2)} 
+    };
+    EXPECT_EQ(this->calc.Evaluate("(a+b)*b", vars), static_cast<TypeParam>(20));
 }
 
-TEST(CalculatorTest, RepeatedVariableUse)
+TYPED_TEST(CalculatorTest, RepeatedVariableUse)
 {
-    Calculator calc;
-    VariableMap vars = { {"x", 3.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("x*x+x", vars), 12.0);
+    VariableMap<TypeParam> vars = { {"x", static_cast<TypeParam>(3)} };
+    EXPECT_EQ(this->calc.Evaluate("x*x+x", vars), static_cast<TypeParam>(12));
 }
 
-TEST(CalculatorTest, MissingVariable)
+TYPED_TEST(CalculatorTest, MissingVariable)
 {
-    Calculator calc;
-    VariableMap vars = { {"x", 5.0} };
-    EXPECT_THROW(calc.Evaluate("x+y", vars), std::runtime_error);
+    VariableMap<TypeParam> vars = { {"x", static_cast<TypeParam>(5)} };
+    EXPECT_THROW(this->calc.Evaluate("x+y", vars), std::runtime_error);
 }
 
-TEST(CalculatorTest, VariableWithDivision)
+TYPED_TEST(CalculatorTest, VariableWithDivision)
 {
-    Calculator calc;
-    VariableMap vars = { {"x", 10.0}, {"y", 2.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("x/y", vars), 5.0);
+    VariableMap<TypeParam> vars = { 
+        {"x", static_cast<TypeParam>(10)}, 
+        {"y", static_cast<TypeParam>(2)} 
+    };
+    EXPECT_EQ(this->calc.Evaluate("x/y", vars), static_cast<TypeParam>(5));
 }
 
-TEST(CalculatorTest, InvalidVariableName)
+TYPED_TEST(CalculatorTest, InvalidVariableName)
 {
-    Calculator calc;
-    VariableMap vars = { {"x1", 5.0}, {"y@", 3.0} };
-    EXPECT_THROW(calc.Evaluate("x1+y@", vars), std::runtime_error);
+    VariableMap<TypeParam> vars = { 
+        {"x1", static_cast<TypeParam>(5)}, 
+        {"y@", static_cast<TypeParam>(3)} 
+    };
+    EXPECT_THROW(this->calc.Evaluate("x1+y@", vars), std::runtime_error);
 }
 
-TEST(CalculatorTest, SingleCharacterVariable)
+TYPED_TEST(CalculatorTest, SingleCharacterVariable)
 {
-    Calculator calc;
-    VariableMap vars = { {"z", 15.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("z", vars), 15.0);
+    VariableMap<TypeParam> vars = { {"z", static_cast<TypeParam>(15)} };
+    EXPECT_EQ(this->calc.Evaluate("z", vars), static_cast<TypeParam>(15));
 }
 
-TEST(CalculatorTest, MultiCharacterVariable)
+TYPED_TEST(CalculatorTest, MultiCharacterVariable)
 {
-    Calculator calc;
-    VariableMap vars = { {"x", 6.0}, {"y", 2.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("x/y", vars), 3.0);
+    VariableMap<TypeParam> vars = { 
+        {"x", static_cast<TypeParam>(6)}, 
+        {"y", static_cast<TypeParam>(2)} 
+    };
+    EXPECT_EQ(this->calc.Evaluate("x/y", vars), static_cast<TypeParam>(3));
 }
 
-TEST(CalculatorTest, VariableWithWhitespace)
+TYPED_TEST(CalculatorTest, VariableWithWhitespace)
 {
-    Calculator calc;
-    VariableMap vars = { {"x", 9.0}, {"y", 3.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate(" x  +  y ", vars), 12.0);
+    VariableMap<TypeParam> vars = { 
+        {"x", static_cast<TypeParam>(9)}, 
+        {"y", static_cast<TypeParam>(3)} 
+    };
+    EXPECT_EQ(this->calc.Evaluate(" x  +  y ", vars), static_cast<TypeParam>(12));
 }
 
-TEST(CalculatorTest, LargeVariableValues)
+TYPED_TEST(CalculatorTest, LargeVariableValues)
 {
-    Calculator calc;
-    VariableMap vars = { {"big", 1000000.0}, {"small", 0.0001} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("big*small", vars), 100.0);
+    if (std::is_same<TypeParam, int>::value) 
+    {
+        GTEST_SKIP() << "Skipping test for int type.";
+    }
+    VariableMap<TypeParam> vars = { 
+        {"big", static_cast<TypeParam>(1000000)}, 
+        {"small", static_cast<TypeParam>(0.0001)} 
+    };
+    EXPECT_EQ(this->calc.Evaluate("big*small", vars), static_cast<TypeParam>(100));
 }
 
-TEST(CalculatorTest, SameVariableNameMultipleTimes)
+TYPED_TEST(CalculatorTest, SameVariableNameMultipleTimes)
 {
-    Calculator calc;
-    VariableMap vars = { {"x", 2.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("x+x*x", vars), 6.0);
+    VariableMap<TypeParam> vars = { {"x", static_cast<TypeParam>(2)} };
+    EXPECT_EQ(this->calc.Evaluate("x+x*x", vars), static_cast<TypeParam>(6));
 }
 
-TEST(CalculatorTest, VariableWithNegativeValue)
+TYPED_TEST(CalculatorTest, VariableWithNegativeValue)
 {
-    Calculator calc;
-    VariableMap vars = { {"neg", -4.0}, {"pos", 2.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("neg+pos", vars), -2.0);
+    VariableMap<TypeParam> vars = { 
+        {"neg", static_cast<TypeParam>(-4)}, 
+        {"pos", static_cast<TypeParam>(2)} 
+    };
+    EXPECT_EQ(this->calc.Evaluate("neg+pos", vars), static_cast<TypeParam>(-2));
 }
 
-TEST(CalculatorTest, VariableWithZero)
+TYPED_TEST(CalculatorTest, VariableWithZero)
 {
-    Calculator calc;
-    VariableMap vars = { {"x", 0.0}, {"y", 10.0} };
-    EXPECT_DOUBLE_EQ(calc.Evaluate("x+y", vars), 10.0);
+    VariableMap<TypeParam> vars = { 
+        {"x", static_cast<TypeParam>(0)}, 
+        {"y", static_cast<TypeParam>(10)} 
+    };
+    EXPECT_EQ(this->calc.Evaluate("x+y", vars), static_cast<TypeParam>(10));
 }

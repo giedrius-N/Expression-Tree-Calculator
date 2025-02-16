@@ -16,7 +16,6 @@ add_library(${PROJECT_NAME} SHARED
 	# Tokenizer
 	src/Tokenizer.cpp
 	include/Tokenizer.h
-	src/Token.cpp
 	include/Token.h
 	# Nodes
 	include/Node.h
