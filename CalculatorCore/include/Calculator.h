@@ -1,12 +1,13 @@
 #ifndef CALCULATOR_H
 #define CALCULATOR_H
 #include "Types.h"
+#include "CalculatorCoreAPI.h"
 #include <string>
 
 /// <summary>
 /// Calculator class to evaluate mathematical expressions.
 /// </summary>
-class Calculator
+class CALCULATORCORE_API Calculator
 {
 public:
 	/// <summary>
