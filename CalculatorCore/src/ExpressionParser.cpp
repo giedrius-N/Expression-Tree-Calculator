@@ -27,8 +27,15 @@ std::unique_ptr<Node> ExpressionParser::BuildExpressionTree(
         }
         else if (token.GetType() == TokenType::VARIABLE)
         {
-            double value = variablePool.at(token.GetVariable());
-            nodeStack.push(std::make_unique<NumberNode>(value));
+            try
+            {
+                double value = variablePool.at(token.GetVariable());
+                nodeStack.push(std::make_unique<NumberNode>(value));
+            }
+            catch (const std::out_of_range&)
+            {
+                throw std::runtime_error("Missing variable value!");
+            }
         }
         else if (token.GetType() == TokenType::OPERATOR)
         {
