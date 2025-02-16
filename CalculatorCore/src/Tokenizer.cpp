@@ -4,7 +4,12 @@
 #include <iostream>
 #include <unordered_set>
 
+/// <summary>
+/// Initializing Tokenizer with three main and tested types: double, float, and int.
+/// </summary>
 template class Tokenizer<double>;
+template class Tokenizer<float>;
+template class Tokenizer<int>;
 
 template <typename T>
 void Tokenizer<T>::Tokenize(
@@ -173,7 +178,7 @@ VariableMap<T> Tokenizer<T>::PromptForVariableValues(const std::vector<std::stri
 
     for (const auto& var : variableList)
     {
-        double value;
+        T value;
         std::cout << "Please enter a value for variable '" << var << "': ";
         std::cin >> value;
         variableValues[var] = value;
@@ -211,7 +216,7 @@ int Tokenizer<T>::GetPrecedence(char operation)
 	case '*':
 	case '/':
 		return 2;
-    case 'u':
+    case 'u':               // Unary minus
         return 3;
 	default:
 		return -1;
@@ -221,14 +226,14 @@ int Tokenizer<T>::GetPrecedence(char operation)
 template <typename T>
 void Tokenizer<T>::InfixToPostfix(std::vector<Token<T>>& tokens)
 {
-    std::vector<Token<double>> postfix;
+    std::vector<Token<T>> postfix;
     postfix.reserve(tokens.size());
 
-    std::stack<Token<double>> opStack;
+    std::stack<Token<T>> opStack;
 
     for (size_t i = 0; i < tokens.size(); ++i)
     {
-        const Token<double>& current = tokens[i];
+        const Token<T>& current = tokens[i];
 
         if (current.GetType() == TokenType::NUMBER || current.GetType() == TokenType::VARIABLE)
         {
@@ -248,7 +253,7 @@ void Tokenizer<T>::InfixToPostfix(std::vector<Token<T>>& tokens)
                 }
                 else
                 {
-                    const Token<double>& prev = tokens[i - 1];
+                    const Token<T>& prev = tokens[i - 1];
                     // If the previous token is not a number and not a variable,
                     // then there is no valid left-hand operand.
                     if (prev.GetType() != TokenType::NUMBER && prev.GetType() != TokenType::VARIABLE)
@@ -261,7 +266,7 @@ void Tokenizer<T>::InfixToPostfix(std::vector<Token<T>>& tokens)
             if (isUnaryMinus)
             {
                 // Creating unary minus operation
-                Token<double> unaryMinus('u');
+                Token<T> unaryMinus('u');
                 while (!opStack.empty() &&
                     IsOperator(opStack.top().GetOperation()) &&
                     GetPrecedence(opStack.top().GetOperation()) >= GetPrecedence('u'))

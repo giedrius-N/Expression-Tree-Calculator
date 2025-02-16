@@ -6,6 +6,7 @@
 /// <summary>
 /// Node representing an operator.
 /// </summary>
+/// <typeparam name="T">Numeric type.</typeparam>
 template <typename T>
 class OperatorNode : public Node<T>
 {

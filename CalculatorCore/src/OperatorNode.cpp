@@ -1,7 +1,12 @@
 #include "OperatorNode.h"
 #include <stdexcept>
 
+/// <summary>
+/// Initializing OperatorNode with three main and tested types: double, float, and int.
+/// </summary>
 template class OperatorNode<double>;
+template class OperatorNode<float>;
+template class OperatorNode<int>;
 
 template <typename T>
 OperatorNode<T>::OperatorNode(

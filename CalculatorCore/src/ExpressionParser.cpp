@@ -4,7 +4,12 @@
 #include <stack>
 #include <stdexcept>
 
+/// <summary>
+/// Initializing ExpressionParser with three main and tested types: double, float, and int.
+/// </summary>
 template class ExpressionParser<double>;
+template class ExpressionParser<float>;
+template class ExpressionParser<int>;
 
 template <typename T>
 ExpressionParser<T>::ExpressionParser()
@@ -18,7 +23,7 @@ ExpressionParser<T>::~ExpressionParser()
 
 template <typename T>
 std::unique_ptr<Node<T>> ExpressionParser<T>::BuildExpressionTree(
-    const std::vector<Token<double>>& tokens, 
+    const std::vector<Token<T>>& tokens, 
     VariableMap<T>& variablePool
 )
 {
@@ -58,7 +63,7 @@ std::unique_ptr<Node<T>> ExpressionParser<T>::BuildExpressionTree(
                 nodeStack.push(
                     std::make_unique<OperatorNode<T>>(
                         '-',
-                        std::make_unique<NumberNode<T>>(0.0),
+                        std::make_unique<NumberNode<T>>(static_cast<T>(0.0)),
                         std::move(operand)
                         )
                 );

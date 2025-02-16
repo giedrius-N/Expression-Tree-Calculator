@@ -5,6 +5,7 @@
 /// <summary>
 /// Node representing a numeric value (leaf node).
 /// </summary>
+/// <typeparam name="T">Numeric type.</typeparam>
 template <typename T>
 class NumberNode : public Node<T>
 {

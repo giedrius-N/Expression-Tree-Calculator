@@ -5,8 +5,9 @@
 #include <string>
 
 /// <summary>
-/// Calculator class to evaluate mathematical expressions.
+/// Templated Calculator class for evaluating expressions.
 /// </summary>
+/// <typeparam name="T">Numeric type used for calculations.</typeparam>
 template <typename T>
 class CALCULATORCORE_API Calculator
 {
@@ -37,10 +38,10 @@ public:
 	T Evaluate(const std::string& expression, const VariableMap<T>& predefinedVariables);
 
 private:
-
-
-
-
+	/// <summary>
+	/// Evaluates the given expression using provided variables.
+	/// </summary>
+	/// <typeparam name="T">Numeric type used for evaluation.</typeparam>
 	T EvaluateExpression(std::string expression, VariableMap<T> variables);
 };
 

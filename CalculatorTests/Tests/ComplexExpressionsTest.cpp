@@ -1,50 +1,46 @@
-#include "Calculator.h"
+#include "CalculatorTestFixture.h"
 #include <gtest/gtest.h>
 
-TEST(CalculatorTest, ComplexParentheses)
+TYPED_TEST(CalculatorTest, ComplexParentheses)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("(2+3)*(4-2)"), 10.0);
+    EXPECT_EQ(this->calc.Evaluate("(2+3)*(4-2)"), static_cast<TypeParam>(10));
 }
 
-TEST(CalculatorTest, NestedParentheses)
+TYPED_TEST(CalculatorTest, NestedParentheses)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("((3+2)*(4-1))/5"), 3.0);
+    EXPECT_EQ(this->calc.Evaluate("((3+2)*(4-1))/5"), static_cast<TypeParam>(3));
 }
 
-TEST(CalculatorTest, MultipleOperations)
+TYPED_TEST(CalculatorTest, MultipleOperations)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("2+3*4-5/5"), 13.0);
+    EXPECT_EQ(this->calc.Evaluate("2+3*4-5/5"), static_cast<TypeParam>(13));
 }
 
-TEST(CalculatorTest, LargeNumbers)
+TYPED_TEST(CalculatorTest, LargeNumbers)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("1000000+1000000"), 2000000.0);
+    EXPECT_EQ(this->calc.Evaluate("1000000+1000000"), static_cast<TypeParam>(2000000));
 }
 
-TEST(CalculatorTest, SmallNumbers)
+TYPED_TEST(CalculatorTest, SmallNumbers)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("0.0001+0.0002"), 0.0003);
+    EXPECT_NEAR(this->calc.Evaluate("0.0001+0.0002"), static_cast<TypeParam>(0.0003), 1e-5);
 }
 
-TEST(CalculatorTest, VeryLargeDivision)
+TYPED_TEST(CalculatorTest, VeryLargeDivision)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("1000000/1"), 1000000.0);
+    EXPECT_EQ(this->calc.Evaluate("1000000/1"), static_cast<TypeParam>(1000000));
 }
 
-TEST(CalculatorTest, RepeatedParentheses)
+TYPED_TEST(CalculatorTest, RepeatedParentheses)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("((((3+2))))"), 5.0);
+    EXPECT_EQ(this->calc.Evaluate("((((3+2))))"), static_cast<TypeParam>(5));
 }
 
-TEST(CalculatorTest, DecimalMultiplication)
+TYPED_TEST(CalculatorTest, DecimalMultiplication)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("2.5*4.0"), 10.0);
+    if (std::is_same<TypeParam, int>::value) 
+    {
+        GTEST_SKIP() << "Skipping test for int type.";
+    }
+    EXPECT_EQ(this->calc.Evaluate("2.5*4.0"), static_cast<TypeParam>(10));
 }

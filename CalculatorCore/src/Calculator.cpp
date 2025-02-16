@@ -4,7 +4,12 @@
 #include "Types.h"
 #include <iostream>
 
+/// <summary>
+/// Initializing Calculator with three main and tested types: double, float, and int.
+/// </summary>
 template class Calculator<double>;
+template class Calculator<float>;
+template class Calculator<int>;
 
 template <typename T>
 Calculator<T>::Calculator()
@@ -45,7 +50,7 @@ T Calculator<T>::EvaluateExpression(std::string expression, VariableMap<T> varia
     }
 
     ExpressionParser<T> parser;
-    T result = 0.0;
+    T result;
     try
     {
         auto root = parser.BuildExpressionTree(tokens, variables);

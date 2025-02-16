@@ -1,79 +1,71 @@
-#include "Calculator.h"
+#include "CalculatorTestFixture.h"
 #include <gtest/gtest.h>
 
-TEST(CalculatorTest, UnaryMinusWithAddition)
+TYPED_TEST(CalculatorTest, UnaryMinusWithAddition)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("3 + -2"), 1.0);
+    EXPECT_EQ(this->calc.Evaluate("3 + -2"), static_cast<TypeParam>(1));
 }
 
-TEST(CalculatorTest, UnaryMinusComplex)
+TYPED_TEST(CalculatorTest, UnaryMinusComplex)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("-(3+2)"), -5.0);
+    EXPECT_EQ(this->calc.Evaluate("-(3+2)"), static_cast<TypeParam>(-5));
 }
 
-TEST(CalculatorTest, UnaryMinusSingleNumber)
+TYPED_TEST(CalculatorTest, UnaryMinusSingleNumber)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("-7"), -7.0);
+    EXPECT_EQ(this->calc.Evaluate("-7"), static_cast<TypeParam>(-7));
 }
 
-TEST(CalculatorTest, UnaryMinusZero)
+TYPED_TEST(CalculatorTest, UnaryMinusZero)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("-0"), 0.0);
+    EXPECT_EQ(this->calc.Evaluate("-0"), static_cast<TypeParam>(0));
 }
 
-TEST(CalculatorTest, MultipleUnaryMinus)
+TYPED_TEST(CalculatorTest, MultipleUnaryMinus)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("--5"), 5.0);
-    EXPECT_DOUBLE_EQ(calc.Evaluate("---5"), -5.0);
+    EXPECT_EQ(this->calc.Evaluate("--5"), static_cast<TypeParam>(5));
+    EXPECT_EQ(this->calc.Evaluate("---5"), static_cast<TypeParam>(-5));
 }
 
-TEST(CalculatorTest, UnaryMinusWithParentheses)
+TYPED_TEST(CalculatorTest, UnaryMinusWithParentheses)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("-(3 + 2)"), -5.0);
-    EXPECT_DOUBLE_EQ(calc.Evaluate("-(4 * (2 + 1))"), -12.0);
+    EXPECT_EQ(this->calc.Evaluate("-(3 + 2)"), static_cast<TypeParam>(-5));
+    EXPECT_EQ(this->calc.Evaluate("-(4 * (2 + 1))"), static_cast<TypeParam>(-12));
 }
 
-TEST(CalculatorTest, UnaryMinusInComplexExpression)
+TYPED_TEST(CalculatorTest, UnaryMinusInComplexExpression)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("5 + -3 * 2"), -1.0);
-    EXPECT_DOUBLE_EQ(calc.Evaluate("10 - -(3 + 2)"), 15.0);
+    EXPECT_EQ(this->calc.Evaluate("5 + -3 * 2"), static_cast<TypeParam>(-1));
+    EXPECT_EQ(this->calc.Evaluate("10 - -(3 + 2)"), static_cast<TypeParam>(15));
 }
 
-TEST(CalculatorTest, UnaryMinusWithFractions)
+TYPED_TEST(CalculatorTest, UnaryMinusWithFractions)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate("-0.5"), -0.5);
-    EXPECT_DOUBLE_EQ(calc.Evaluate("-0.3333 + 1"), 0.6667);
+    if (std::is_same<TypeParam, int>::value) 
+    {
+        GTEST_SKIP() << "Skipping test for int type.";
+    }
+    EXPECT_EQ(this->calc.Evaluate("-0.5"), static_cast<TypeParam>(-0.5));
+    EXPECT_NEAR(this->calc.Evaluate("-0.3333 + 1"), static_cast<TypeParam>(0.6667), 0.0001);
 }
 
-TEST(CalculatorTest, UnaryMinusWithWhitespace)
+TYPED_TEST(CalculatorTest, UnaryMinusWithWhitespace)
 {
-    Calculator<double> calc;
-    EXPECT_DOUBLE_EQ(calc.Evaluate(" - 4"), -4.0);
-    EXPECT_DOUBLE_EQ(calc.Evaluate("3  +  -   2"), 1.0);
+    EXPECT_EQ(this->calc.Evaluate(" - 4"), static_cast<TypeParam>(-4));
+    EXPECT_EQ(this->calc.Evaluate("3  +  -   2"), static_cast<TypeParam>(1));
 }
 
-TEST(CalculatorTest, UnaryMinusWithoutOperand)
+TYPED_TEST(CalculatorTest, UnaryMinusWithoutOperand)
 {
-    Calculator<double> calc;
-    EXPECT_THROW(calc.Evaluate("-"), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("-"), std::runtime_error);
 }
 
-TEST(CalculatorTest, UnaryMinusBeforeOperator)
+TYPED_TEST(CalculatorTest, UnaryMinusBeforeOperator)
 {
-    Calculator<double> calc;
-    EXPECT_THROW(calc.Evaluate("5+-"), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("5+-"), std::runtime_error);
 }
 
-TEST(CalculatorTest, UnaryMinusAfterOperatorMissingOperand)
+TYPED_TEST(CalculatorTest, UnaryMinusAfterOperatorMissingOperand)
 {
-    Calculator<double> calc;
-    EXPECT_THROW(calc.Evaluate("5 + -"), std::runtime_error);
+    EXPECT_THROW(this->calc.Evaluate("5 + -"), std::runtime_error);
 }
