@@ -78,7 +78,7 @@ A lightweight C++ command-line calculator that evaluates mathematical expression
 
 ```bash
 # Go to the source directory
-cd quadigi-jr-cpp-hw
+cd Expression-Tree-Calculator
 
 # Create a build directory
 mkdir build && cd build
