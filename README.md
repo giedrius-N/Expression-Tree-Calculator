@@ -1,21 +1,7 @@
 
-# Quadigi Homework for Junior C++ Software Engineer Position
+# Simple Expression Tree Calculator in C++
 
-Homework task for Junior C++ Software Engineer position at [Quadigi](https://quadigi.com/)
-
----
-
-## Task
-
-**Task:**  
-Write a command-line application called "Calculator". The application should allow users to enter a mathematical expression of any length, e.g., `x+2*9-8/3*(2-1)-32.4`, and provide the result.
-
-**Requirements:**  
-- The application is written in C++ using object-oriented principles.  
-- A tree structure is constructed, where nodes represent operations and leaves represent values.  
-- Features from C++11 and C++14 are used, such as `constexpr`, `auto` type deduction, and `std::make_unique`.  
-- Unit tests are implemented using Google Test (gtest).  
-- CMake is used for build configuration.
+A lightweight C++ command-line calculator that evaluates mathematical expressions using an expression tree.
 
 ---
 
